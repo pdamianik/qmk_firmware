@@ -595,6 +595,11 @@ __attribute__((weak)) void os_state_indicate(void) {
 }
 
 bool LED_INDICATORS_KB(void) {
+#    if defined(WIRED_BAT_LEVEL) && (defined(LED_MATRIX_ENABLE) || defined(RGB_MATRIX_ENABLE)) && defined(BAT_LEVEL_LED_LIST)
+    if (bat_level_animiation_actived()) {
+        bat_level_animiation_indicate();
+    }
+#    endif
     if (get_transport() & TRANSPORT_WIRELESS) {
         /* Prevent backlight flash caused by key activities */
         if (battery_is_critical_low()) {
@@ -617,7 +622,7 @@ bool LED_INDICATORS_KB(void) {
         }
 #        endif
 #    endif
-#    if (defined(LED_MATRIX_ENABLE) || defined(RGB_MATRIX_ENABLE)) && defined(BAT_LEVEL_LED_LIST)
+#    if !defined(WIRED_BAT_LEVEL) && (defined(LED_MATRIX_ENABLE) || defined(RGB_MATRIX_ENABLE)) && defined(BAT_LEVEL_LED_LIST)
         if (bat_level_animiation_actived()) {
             bat_level_animiation_indicate();
         }
